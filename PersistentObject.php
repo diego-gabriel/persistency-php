@@ -52,13 +52,25 @@ abstract class PersistentObject{
     public function JSON(){
         return json_encode(ObjectInspector::inspectObject($this));
     }
-
+    
     public function getID(){
         return $this->id;
     }
     
     public function setID($id){
         $this->id = $id;
+    }
+
+    function __call($method, $params) {
+        $field = strtolower(substr($method, 3));
+
+        if (strncasecmp($method, "get", 3) == 0) {
+            echo "wtf?  ".strncasecmp($method, "get", 3)."<br>";
+            return $this->$field;
+        }
+        if (strncasecmp($method, "set", 3) == 0) {
+            ObjectBuilder::setValue($this, $field, $params[0]);
+        }
     }
     
     public abstract function tableName();

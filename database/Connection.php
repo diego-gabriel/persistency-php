@@ -8,7 +8,7 @@ class Connection implements PersistentDatabase{
     
     private function __construct(){
     
-        $this->db_connection = new mysqli("localhost", "root", "", "mascotas_database");
+        $this->db_connection = new mysqli("localhost", "root", "", "eth_ag");
         if ($this->db_connection->connect_error){
             echo "connection failed: "+$this->db_connection->connect_error;
         } else {

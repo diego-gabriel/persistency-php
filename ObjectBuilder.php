@@ -11,15 +11,23 @@ class ObjectBuilder {
         
         foreach($data as $field_name => $value){
             if ($field_name != "id"){
-                $field = $class->getProperty($field_name);
-                $field->setAccessible(true);
-                $field->setValue($instance, is_numeric($value) ? (int)$value : $value);
+                self::setField($class->getProperty($field_name), $instance, $value);
             }
         }
         
         $instance->setID((int)$data["id"]);
         
         return $instance;
+    }
+
+    public static function setValue($object, $field_name, $value){
+        $reflection = new ReflectionClass($object);
+        self::setField($reflection->getProperty($field_name), $object, $value);
+    }
+
+    public static function setField($field, $instance, $value){
+        $field->setAccessible(true);
+        $field->setValue($instance, is_numeric($value) ? (int)$value : $value);
     }
 }
 
