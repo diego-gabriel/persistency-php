@@ -65,7 +65,6 @@ abstract class PersistentObject{
         $field = strtolower(substr($method, 3));
 
         if (strncasecmp($method, "get", 3) == 0) {
-            echo "wtf?  ".strncasecmp($method, "get", 3)."<br>";
             return $this->$field;
         }
         if (strncasecmp($method, "set", 3) == 0) {
