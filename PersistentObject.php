@@ -63,9 +63,8 @@ abstract class PersistentObject{
 
     function __call($method, $params) {
         $field = strtolower(substr($method, 3));
-
         if (strncasecmp($method, "get", 3) == 0) {
-            return $this->$field;
+            return ObjectInspector::getValue($this, $field);
         }
         if (strncasecmp($method, "set", 3) == 0) {
             ObjectBuilder::setValue($this, $field, $params[0]);

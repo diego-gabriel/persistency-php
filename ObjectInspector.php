@@ -15,7 +15,7 @@
             
             return $valuesMap;
         }
-        
+
         //returns an array of all field names
         public static function proyect($anObject){
             $proyection = array();
@@ -27,6 +27,14 @@
             return $proyection;
         }
         
+        //return field value
+        public static function getValue($anObject, $fieldName){
+            $reflectionClass = new ReflectionClass($anObject);
+            $field = $reflectionClass->getProperty($fieldName);
+            $field->setAccessible(true);
+            return $field->getValue($anObject);
+        }
+
         private static function getClassProperties($class){
             return $class->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PRIVATE | ReflectionProperty::IS_PROTECTED);
         }
