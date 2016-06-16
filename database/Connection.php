@@ -8,7 +8,7 @@ class Connection implements PersistentDatabase{
     
     private function __construct(){
     
-        $this->db_connection = new mysqli("localhost", "root", "", "eth_ag");
+        $this->db_connection = new mysqli("localhost", "root", "assignmentgame", "eth_ag");
         if ($this->db_connection->connect_error){
             echo "connection failed: "+$this->db_connection->connect_error;
         } else {
@@ -29,6 +29,8 @@ class Connection implements PersistentDatabase{
         $insertedID = -1;
         if ($success){
             $insertedID = $this->db_connection->insert_id;
+        } else {
+            echo "Persistency error: Can't insert object\n<br>";
         }
         
         return (int)$insertedID;
