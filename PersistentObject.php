@@ -49,6 +49,11 @@ abstract class PersistentObject{
         return $objects;
     }
     
+    public function delete(){
+        $db = Connection::getInstance();
+        $db->delete($this->tableName(), $this->getID());
+    }
+
     public function JSON(){
         return json_encode(ObjectInspector::inspectObject($this));
     }

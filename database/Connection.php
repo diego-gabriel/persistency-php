@@ -30,12 +30,20 @@ class Connection implements PersistentDatabase{
         if ($success){
             $insertedID = $this->db_connection->insert_id;
         } else {
-            echo "Persistency error: Can't insert object\n<br>";
+            echo "Persistency error: Can't insert object '$table' ($query)\n";
         }
         
         return (int)$insertedID;
     }
     
+    public function delete($table, $id){
+        $query = "DELETE FROM $table WHERE id=$id";
+        $success = $this->db_connection->query($query);
+        if (!$success){
+            echo "Persistency error: can't delete object #$id from $table";
+        }
+    }
+
     public function update($table, $data, $id){
         $dataList = $this->listData($data, true);
         $query = "UPDATE $table SET $dataList[0] WHERE id = $id";

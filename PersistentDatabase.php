@@ -11,4 +11,5 @@ interface PersistentDatabase {
     public function find($table, $proyection, $id);
     public function where($table, $proyection, $condition);
     public function update($table, $proyection, $id);
+    public function delete($table, $id);
 }
