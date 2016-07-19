@@ -4,6 +4,9 @@ require_once dirname(__FILE__).'/ObjectInspector.php';
 require_once dirname(__FILE__).'/database/Connection.php';
 require_once dirname(__FILE__).'/ObjectRetriever.php';
 require_once dirname(__FILE__).'/ObjectBuilder.php';
+require_once dirname(__FILE__)."/../model/Game.php";
+require_once dirname(__FILE__)."/../model/Player.php";
+require_once dirname(__FILE__)."/../model/Round.php";
 
 abstract class PersistentObject{
     private $id;
@@ -67,7 +70,7 @@ abstract class PersistentObject{
     }
 
     function __call($method, $params) {
-        $field = strtolower(substr($method, 3));
+        $field = $this->toUnderscore(substr($method, 3));
         if (strncasecmp($method, "get", 3) == 0) {
             return ObjectInspector::getValue($this, $field);
         }
@@ -76,6 +79,37 @@ abstract class PersistentObject{
         }
     }
     
+    private function toUnderscore($str){
+        $res = "";
+        $length = strlen($str);
+
+        if ($length > 0){
+            $res .= strtolower($str[0]);
+
+            for($i = 1; $i < $length-1; $i++){
+                if (ctype_upper($str[$i])){
+                    // ...[A]...
+                    if (ctype_lower($str[$i+1])){
+                        //...[A]b... -> ...[_a]b...
+                        $res .= '_'.strtolower($str[$i]);
+                    } else
+                    if (ctype_lower($str[$i-1])){
+                        //...b[A]... -> ...b[_a]...
+                        $res .= '_'.strtolower($str[$i]);
+                    } else {
+                        //...[A]B... -> ...[a]B...
+                        $res .= strtolower($str[$i]);
+                    }
+                } else {
+                    $res .= $str[$i];
+                }
+            }
+
+            $res .= strtolower($str[$length-1]);
+        }
+        return $res;
+    }
+
     public abstract function tableName();
 }
 
