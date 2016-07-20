@@ -18,12 +18,14 @@ abstract class PersistentObject{
     public function save(){
         $inspector = new ObjectInspector();
         $db = Connection::getInstance();
+        $success = false;
         if ($this->id < 0){
-            $newID = $db->write($this->tableName(), $inspector->inspectObject($this, false));
+            $success = $newID = $db->write($this->tableName(), $inspector->inspectObject($this, false));
             $this->id = $newID;
         } else {
-            $db->update($this->tableName(), $inspector->inspectObject($this, false), $this->id);
+            $success = $db->update($this->tableName(), $inspector->inspectObject($this, false), $this->id);
         }
+        return $success;
     }
     
     public static function find($id, $proyection = null){

@@ -31,6 +31,8 @@ class Connection implements PersistentDatabase{
             $insertedID = $this->db_connection->insert_id;
         } else {
             echo "Persistency error: Can't insert object '$table' ($query)\n";
+            //this value must be interpreted as a failure on writing
+            $insertedID = 0;
         }
         
         return (int)$insertedID;
@@ -47,7 +49,7 @@ class Connection implements PersistentDatabase{
     public function update($table, $data, $id){
         $dataList = $this->listData($data, true);
         $query = "UPDATE $table SET $dataList[0] WHERE id = $id";
-        $this->db_connection->query($query);
+        return $this->db_connection->query($query);
     }
     
     public function find($table, $proyection, $id){
