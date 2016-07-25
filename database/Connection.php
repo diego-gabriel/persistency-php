@@ -42,7 +42,7 @@ class Connection implements PersistentDatabase{
         $query = "DELETE FROM $table WHERE id=$id";
         $success = $this->db_connection->query($query);
         if (!$success){
-            echo "Persistency error: can't delete object #$id from $table";
+            echo "Persistency error: can't delete object #$id from $table\n";
         }
     }
 
@@ -68,9 +68,14 @@ class Connection implements PersistentDatabase{
         $proyection_list = $this->listProyection($proyection);
         $query = "SELECT $proyection_list FROM $table WHERE $condition";
         $result = $this->db_connection->query($query);
-        $data = array();
-        while($row = $result->fetch_assoc()){
-            $data[] = $row;
+        if ($result){
+            $data = array();
+            while($row = $result->fetch_assoc()){
+                $data[] = $row;
+            }
+        } else {
+            $data = null;
+            echo "Persistent error: can't retreive '$proyection' from '$table' where condition '$condition' holds\n";
         }
         return $data;
     }
