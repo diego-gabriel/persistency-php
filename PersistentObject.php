@@ -62,6 +62,10 @@ abstract class PersistentObject{
     public function JSON(){
         return json_encode(ObjectInspector::inspectObject($this));
     }
+
+    public function asArray(){
+        return ObjectInspector::inspectObject($this);
+    }
     
     public function getID(){
         return $this->id;
