@@ -75,7 +75,7 @@ class Connection implements PersistentDatabase{
             }
         } else {
             $data = null;
-            echo "Persistent error: can't retreive '$proyection' from '$table' where condition '$condition' holds\n";
+            echo "Persistent error: can't retreive '$proyection_list' from '$table' where condition '$condition' holds\n";
         }
         return $data;
     }
