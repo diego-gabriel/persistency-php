@@ -19,6 +19,11 @@ class Connection implements PersistentDatabase{
         if (!isset(self::$instance)){
             self::$instance = new Connection();
         }
+
+        if (isset($GLOBALS['LOG_CONNECTION_STATUS']) && $GLOBALS['LOG_CONNECTION_STATUS']){
+            echo self::$instance->db_connection->stat()."\n";
+        }
+
         return self::$instance;
     }
     
@@ -57,8 +62,13 @@ class Connection implements PersistentDatabase{
         $query = "SELECT $proyection_list FROM $table WHERE id = $id";
         $result = $this->db_connection->query($query);
         $data = null;
-        while ($row = $result->fetch_assoc()){
-            $data = $row;
+        if ($result){
+            while ($row = $result->fetch_assoc()){
+                $data = $row;
+            }
+        } else {
+            $id = $id ? $id : "null";
+            echo "Persistency error: can't find object $table with id $id\n";
         }
         
         return $data;
@@ -74,8 +84,9 @@ class Connection implements PersistentDatabase{
                 $data[] = $row;
             }
         } else {
-            $data = null;
-            echo "Persistent error: can't retreive '$proyection_list' from '$table' where condition '$condition' holds\n";
+            $data = [];
+            echo "Persistency error: can't retreive '$proyection_list' from '$table' where condition '$condition' holds\n";
+            echo "Query: $query\n";
         }
         return $data;
     }
