@@ -7,26 +7,35 @@ class Connection implements PersistentDatabase{
     private $db_connection;
     
     private function __construct(){
-    
-        $this->db_connection = new mysqli("localhost", "root", "assignmentgame", "eth_ag");
-        if ($this->db_connection->connect_error){
-            echo "connection failed: "+$this->db_connection->connect_error;
-        } else {
-        }
+        $this->db_connection = $this->newConnection();
     }
     
     public static function getInstance(){
         if (!isset(self::$instance)){
             self::$instance = new Connection();
-        }
-
-        if (isset($GLOBALS['LOG_CONNECTION_STATUS']) && $GLOBALS['LOG_CONNECTION_STATUS']){
-            echo self::$instance->db_connection->stat()."\n";
+        } else {
+            self::$instance->checkDBStatus();
         }
 
         return self::$instance;
     }
+
+    private function newConnection(){
+        $connection = new mysqli("localhost", "root", "assignmentgame", "eth_ag");
+     
+        if ($connection->connect_error){
+            echo "connection failed: "+$connection->connect_error;
+        } else {
+        }
+        return $connection;
+    }
     
+    public function checkDBStatus(){
+        if (!$this->db_connection->ping()){
+            $this->db_connection = $this->newConnection();
+        }
+    }
+
     public function write($table, $data){
         $dataList = $this->listData($data);
         $query = "INSERT INTO $table ($dataList[0]) VALUES ($dataList[1])";
@@ -35,6 +44,7 @@ class Connection implements PersistentDatabase{
         if ($success){
             $insertedID = $this->db_connection->insert_id;
         } else {
+            if ($table != 'log_entries')
             echo "Persistency error: Can't insert object '$table' ($query)\n";
             //this value must be interpreted as a failure on writing
             $insertedID = 0;
