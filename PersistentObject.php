@@ -54,6 +54,18 @@ abstract class PersistentObject{
         return $objects;
     }
     
+    //returns first result of where condition, null if no match found
+    public static function first($condition, $proyection = null){
+        $result = self::where($condition, $proyection);
+        return count($result) > 0 ? $result[0] : null;
+    }
+    //returns first result of where condition, null if no match found
+    public static function last($condition, $proyection = null){
+        $result = self::where($condition, $proyection);
+        $count = count($result);
+        return $count > 0 ? $result[$count-1] : null;
+    }
+
     public function delete(){
         $db = Connection::getInstance();
         $db->delete($this->tableName(), $this->getID());
