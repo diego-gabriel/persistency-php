@@ -3,6 +3,7 @@
 require_once dirname(__FILE__).'/../PersistentDatabase.php';
 
 class Connection implements PersistentDatabase{
+    public static $__TRANSACTION_COUNT = 0;
     private static $instance;
     private $db_connection;
     
@@ -37,6 +38,7 @@ class Connection implements PersistentDatabase{
     }
 
     public function write($table, $data){
+        self::$__TRANSACTION_COUNT++;
         $dataList = $this->listData($data);
         $query = "INSERT INTO $table ($dataList[0]) VALUES ($dataList[1])";
         $success = $this->db_connection->query($query);
@@ -54,6 +56,7 @@ class Connection implements PersistentDatabase{
     }
     
     public function delete($table, $id){
+        self::$__TRANSACTION_COUNT++;
         $query = "DELETE FROM $table WHERE id=$id";
         $success = $this->db_connection->query($query);
         if (!$success){
@@ -62,12 +65,14 @@ class Connection implements PersistentDatabase{
     }
 
     public function update($table, $data, $id){
+        self::$__TRANSACTION_COUNT++;
         $dataList = $this->listData($data, true);
         $query = "UPDATE $table SET $dataList[0] WHERE id = $id";
         return $this->db_connection->query($query);
     }
     
     public function find($table, $proyection, $id){
+        self::$__TRANSACTION_COUNT++;
         $proyection_list = $this->listProyection($proyection);
         $query = "SELECT $proyection_list FROM $table WHERE id = $id";
         $result = $this->db_connection->query($query);
@@ -85,6 +90,7 @@ class Connection implements PersistentDatabase{
     }
     
     public function where($table, $proyection, $condition){
+        self::$__TRANSACTION_COUNT++;
         $proyection_list = $this->listProyection($proyection);
         $query = "SELECT $proyection_list FROM $table WHERE $condition";
         $result = $this->db_connection->query($query);
@@ -102,6 +108,7 @@ class Connection implements PersistentDatabase{
     }
     
     public function all($table){
+        self::$__TRANSACTION_COUNT++;
         $query = "SELECT id FROM $table";
         $result = $this->db_connection->query($query);
         $data = array();
