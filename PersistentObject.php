@@ -10,9 +10,11 @@ require_once dirname(__FILE__)."/../model/Round.php";
 
 abstract class PersistentObject{
     private $id;
-    
+    private $created_at;
+
     public function __construct($id = -1) {
         $this->id = $id;
+        $this->created_at = date('Y-m-d H:m:s', time());
     }
     
     public function save(){
@@ -79,6 +81,22 @@ abstract class PersistentObject{
         return ObjectInspector::inspectObject($this);
     }
     
+    public function getCreated_at(){
+        return $this->created_at;
+    }
+
+    public function getCreatedAt(){
+        return $this->created_at;
+    }
+
+    public function setCreated_at($v){
+        $this->created_at = $v;
+    }
+
+    public function setCreatedAt($v){
+        $this->created_at = $v;
+    }
+
     public function getID(){
         return $this->id;
     }
@@ -87,7 +105,7 @@ abstract class PersistentObject{
         $this->id = $id;
     }
 
-    function __call($method, $params) {
+    public function __call($method, $params) {
         $field = $this->toUnderscore(substr($method, 3));
         if (strncasecmp($method, "get", 3) == 0) {
             return ObjectInspector::getValue($this, $field);

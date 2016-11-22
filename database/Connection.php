@@ -41,6 +41,7 @@ class Connection implements PersistentDatabase{
         self::$__TRANSACTION_COUNT++;
         $dataList = $this->listData($data);
         $query = "INSERT INTO $table ($dataList[0]) VALUES ($dataList[1])";
+        //echo "$query\n";
         $success = $this->db_connection->query($query);
         $insertedID = -1;
 
