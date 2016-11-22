@@ -43,11 +43,12 @@ class Connection implements PersistentDatabase{
         $query = "INSERT INTO $table ($dataList[0]) VALUES ($dataList[1])";
         $success = $this->db_connection->query($query);
         $insertedID = -1;
+
         if ($success){
             $insertedID = $this->db_connection->insert_id;
         } else {
             if ($table != 'log_entries')
-            echo "Persistency error: Can't insert object '$table' ($query)\n";
+                echo "Persistency error: Can't insert object '$table' ($query)\n";
             //this value must be interpreted as a failure on writing
             $insertedID = 0;
         }
