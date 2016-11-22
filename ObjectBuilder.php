@@ -10,13 +10,14 @@ class ObjectBuilder {
         $class = new ReflectionClass($instance);
         
         foreach($data as $field_name => $value){
-            if ($field_name != "id"){
+            if ($field_name != "id" && $field_name != "created_at"){
                 self::setField($class->getProperty($field_name), $instance, $value);
             }
         }
         
+        # Sets id and created_at values
         $instance->setID((int)$data["id"]);
-        
+        $instance->setCreatedAt($data["created_at"]);
         return $instance;
     }
 
