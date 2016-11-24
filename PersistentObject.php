@@ -14,7 +14,7 @@ abstract class PersistentObject{
 
     public function __construct($id = -1) {
         $this->id = $id;
-        $this->created_at = date('Y-m-d H:m:s', time());
+        $this->created_at = date('Y-m-d H:i:s', time());
     }
     
     public function save(){
